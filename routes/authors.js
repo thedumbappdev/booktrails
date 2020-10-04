@@ -5,11 +5,11 @@ const Author = require("../models/author");
 // All Authors Route
 router.get("/", async (req, res) => {
   let searchOptions = {};
-  if (req.query.name != null && req.query.name !== "") {
-    searchOptions.name = new RegExp(req.query.name, "i");
+  if (req.query.name.trim() != null && req.query.name.trim() !== "") {
+    searchOptions.name.trim() = new RegExp(req.query.name.trim(), "i");
   }
   try {
-    const authors = await Author.find(searchOptions);
+    const authors = await Author.find(searchOptions).trim();
     res.render("authors/index", {
       authors: authors,
       searchOptions: req.query,
@@ -28,10 +28,10 @@ router.get("/new", (req, res) => {
 // Create Author Route
 router.post("/", async (req, res) => {
   const author = new Author({
-    name: req.body.name,
+    name: req.body.name.trim,
   });
   try {
-    const newAuthor = await author.save();
+    const newAuthor = await author.save().trim();
     // res.redirect(`authors/${newAuthor.id}`)
     res.redirect(`authors`);
   } catch {
