@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
       books: books,
       searchOptions: req.query,
     });
-  } catch (error) {
+  } catch {
     res.redirect("/");
   }
 });
@@ -46,16 +46,16 @@ router.get("/new", async (req, res) => {
 router.post("/", upload.single("coverImage"), async (req, res) => {
   const fileName = req.file != null ? req.file.name : null;
   const book = new Book({
-    title: req.body.title,
-    author: req.body.author,
+    title: req.body.title.trim(),
+    author: req.body.author.trim(),
     publishDate: new Date(req.body.publishDate),
     pageCount: req.body.pageCount,
-    coverImageName: fileName,
-    description: req.body.description,
+    coverImageName: fileName.trim(),
+    description: req.body.description.trim(),
   });
 
   try {
-    const newBook = await book.save();
+    const newBook = await book.save().trim();
     // res.redirect(`books/${newBook.id}`)
     res.redirect(`books`);
   } catch {
@@ -82,7 +82,7 @@ async function renderNewPage(res, book, hasError = false) {
     };
     if (hasError) params.errorMessage = "Error creating book";
     res.render("books/new", params);
-  } catch (error) {
+  } catch {
     res.redirect("/books");
   }
 }
